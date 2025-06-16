@@ -19,20 +19,24 @@ def index():
     return '<h1>Bakery GET API</h1>'
 
 @app.route('/bakeries')
-def bakeries():
-    return ''
+def get_bakeries():
+    bakeries = Bakery.query.all()
+    return jsonify([b.to_dict() for b in bakeries])
 
 @app.route('/bakeries/<int:id>')
-def bakery_by_id(id):
-    return ''
+def get_bakery_by_id(id):
+    bakery = Bakery.query.get_or_404(id)
+    return jsonify(bakery.to_dict())
 
 @app.route('/baked_goods/by_price')
 def baked_goods_by_price():
-    return ''
+    baked_goods = BakedGood.query.order_by(BakedGood.price.desc()).all()
+    return jsonify([bg.to_dict() for bg in baked_goods])
 
 @app.route('/baked_goods/most_expensive')
 def most_expensive_baked_good():
-    return ''
+    bg = BakedGood.query.order_by(BakedGood.price.desc()).first()
+    return jsonify(bg.to_dict() if bg else {})
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)
